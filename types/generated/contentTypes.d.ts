@@ -362,6 +362,117 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiCarCar extends Schema.CollectionType {
+  collectionName: 'cars';
+  info: {
+    singularName: 'car';
+    pluralName: 'cars';
+    displayName: 'Car';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    car_name: Attribute.String;
+    is_turbo: Attribute.Boolean;
+    desc: Attribute.Blocks;
+    info: Attribute.JSON;
+    price: Attribute.BigInteger;
+    owner_email: Attribute.Email;
+    expired_at: Attribute.DateTime;
+    secret_number: Attribute.Password;
+    single_picture: Attribute.Media;
+    multiple_picture: Attribute.Media;
+    enum: Attribute.Enumeration<['hello', 'world', 'good']>;
+    url: Attribute.UID;
+    intro: Attribute.RichText;
+    user: Attribute.Relation<
+      'api::car.car',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::car.car', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::car.car', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSkillSkill extends Schema.CollectionType {
+  collectionName: 'skills';
+  info: {
+    singularName: 'skill';
+    pluralName: 'skills';
+    displayName: 'Skill';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    skill_name: Attribute.String;
+    mana: Attribute.Decimal;
+    cool_time: Attribute.Integer;
+    users: Attribute.Relation<
+      'api::skill.skill',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::skill.skill',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::skill.skill',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiUserWalletUserWallet extends Schema.CollectionType {
+  collectionName: 'user_wallets';
+  info: {
+    singularName: 'user-wallet';
+    pluralName: 'user-wallets';
+    displayName: 'UserWallet';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    wallet_address: Attribute.String;
+    user: Attribute.Relation<
+      'api::user-wallet.user-wallet',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::user-wallet.user-wallet',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::user-wallet.user-wallet',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -631,7 +742,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -660,6 +770,21 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    user_wallet: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'api::user-wallet.user-wallet'
+    >;
+    cars: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::car.car'
+    >;
+    skills: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::skill.skill'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -687,6 +812,9 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::car.car': ApiCarCar;
+      'api::skill.skill': ApiSkillSkill;
+      'api::user-wallet.user-wallet': ApiUserWalletUserWallet;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
